@@ -81,7 +81,7 @@ class Expansion():
         cwd = getcwd()
         bg = tk.PhotoImage(file = 'output.png')
         self.result.config(image = bg)
-
+    #new
 
 root = tk.Tk()
 main = Expansion(root)
