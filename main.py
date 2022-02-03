@@ -10,6 +10,9 @@ class Expansion():
         '''Constructor Manages Main Window'''
 
         self.root = root
+        self.ws = self.root.winfo_screenwidth()
+        self.hs = self.root.winfo_screenheight()
+        #print(ws,hs)
         self.root.title('Series Expantion Calulator')
         self.root.configure(background  = mainbg)
         self.root.geometry('600x200')
@@ -50,15 +53,15 @@ class Expansion():
             self.der_val = self.dx.subs(x,self.value)
             if i == self.times - 1: add = ''
             else: add = '+'
-            if int(self.value) == 0: self.text += 'x^{} * {}/{}! {} '.format(self.value,i,self.der_val,i,add)
-            else: self.text += '((x - {})**{}*{})/(factorial({})) {} '.format(self.value,i,self.der_val,i,add)
+            self.text += '((x - {})**{}*{})/(factorial({})) {} '.format(self.value,i,self.der_val,i,add)
         
         expr = sympify(self.text)
         
         print(expr)
         preview(expr, viewer='file', filename='taylor.png',dvioptions=['-D','300'],order = 'grevlex')
-        
         self.taylor_res = TopWin('Taylor Expansion','taylor.png')
+        self.taylor_res.counter +=1
+
         
 
 class TopWin():
@@ -72,6 +75,7 @@ class TopWin():
         self.label_image = tk.Label(self.window, image = self.bg)
         self.label_image.pack(expand = True, fill = 'both')
         self.window.resizable(False,False)
+        self.counter = 0 
 
 root = tk.Tk()
 main = Expansion(root)
