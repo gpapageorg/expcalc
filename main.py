@@ -1,9 +1,15 @@
+from cgitb import text
+from copy import copy
 import tkinter as tk
+from tkinter.ttk import *
 from sympy import *
-from IPython import display
+#from IPython import display
 mainbg = '#2B2E4A'
 secbg = '#903749'
 init_printing(use_unicode=True)
+
+taylor_result = []
+
 class Expansion():
     '''Class Expantion Manages Main GUI And Doing The Mathematical Computations'''
     def __init__(self, root):
@@ -18,7 +24,7 @@ class Expansion():
         self.root.geometry('600x200')
         self.root.resizable(False,False)
         self.title = tk.Label(root, text = 'Series Expansion Calculator', font = 'Verdana 20 bold', background= secbg)
-        self.title.pack(fill = 'x')
+        self. title.pack(fill = 'x')
         self.data = tk.Text(root,height = 3,font = 'verdana 15')
         self.data.pack(anchor='w', padx = 5, pady=10, fill = 'x')
         self.f1 = tk.Frame(root, background = mainbg)
@@ -30,10 +36,11 @@ class Expansion():
         
 
     def taylor(self):
+        
         '''Function taylor Manages Taylor expantion'''
+        self.taylor_res = []
         x = symbols('x')
         init_printing(use_unicode=True)
-        #display(Integral(x*2,x))
 
         self.text = ''
         data = self.data.get('1.0',tk.END)
@@ -55,27 +62,28 @@ class Expansion():
             else: add = '+'
             self.text += '((x - {})**{}*{})/(factorial({})) {} '.format(self.value,i,self.der_val,i,add)
         
-        expr = sympify(self.text)
+        self.expr = sympify(self.text)
         
-        print(expr)
-        preview(expr, viewer='file', filename='taylor.png',dvioptions=['-D','300'],order = 'grevlex')
-        self.taylor_res = TopWin('Taylor Expansion','taylor.png')
-        self.taylor_res.counter +=1
-
-        
+        print(self.expr)
+        preview(self.expr, viewer='file', filename='taylor_{}.png'.format(self.fun), dvioptions=['-D','300'])
+        taylor_result.append(TopWin('Taylor Expansion {}'.format(self.fun),'taylor_{}.png'.format(self.fun),self.fun))
+        print(taylor_result, taylor_result)
 
 class TopWin():
     '''Class Responsible For Making Toplevel Windows'''
-    def __init__(self, title, image):
-        self.window = tk.Toplevel()
+    def __init__(self, title, image,fun):
+        self.window = tk.Toplevel(root)
         self.image = image
-        self.title = title
+        self.title = title 
+        self.fun = fun
         self.bg = tk.PhotoImage(file = self.image)
         self.window.title(self.title)
         self.label_image = tk.Label(self.window, image = self.bg)
         self.label_image.pack(expand = True, fill = 'both')
         self.window.resizable(False,False)
-        self.counter = 0 
+        self.label = tk.Label(self.window,text = self.fun)
+        self.label.pack()
+        
 
 root = tk.Tk()
 main = Expansion(root)
