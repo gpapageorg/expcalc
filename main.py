@@ -1,9 +1,8 @@
-from cgitb import text
-from copy import copy
 import tkinter as tk
-from tkinter.ttk import *
+import PIL
+from PIL import Image
+from tkinter import Image, filedialog
 from sympy import *
-#from IPython import display
 mainbg = '#2B2E4A'
 secbg = '#903749'
 init_printing(use_unicode=True)
@@ -30,9 +29,9 @@ class Expansion():
         self.f1 = tk.Frame(root, background = mainbg)
         self.f1.pack(fill = 'both')
         self.b1 = tk.Button(self.f1, text = 'Taylor', font = 'verdana 15 ', background= '#E84545', command = self.taylor)
-        self.b3 = tk.Button(self.f1, text = 'Binomial', font = 'verdana 15', background= '#E84545')
+        #self.b3 = tk.Button(self.f1, text = 'Binomial', font = 'verdana 15', background= '#E84545', command = self.binomial)
         self.b1.grid(row = 1, column= 0, padx= 5, pady= 15)
-        self.b3.grid(row = 1, column= 2, pady= 15, padx = 5)
+        #self.b3.grid(row = 1, column= 2, pady= 15, padx = 5)
         
 
     def taylor(self):
@@ -65,9 +64,9 @@ class Expansion():
         self.expr = sympify(self.text)
         
         print(self.expr)
-        preview(self.expr, viewer='file', filename='taylor_{}.png'.format(self.fun), dvioptions=['-D','300'])
-        taylor_result.append(TopWin('Taylor Expansion {}'.format(self.fun),'taylor_{}.png'.format(self.fun),self.fun))
-        print(taylor_result, taylor_result)
+        preview(self.expr, viewer='file', filename='taylor.png', dvioptions=['-D','300'])
+        taylor_result.append(TopWin('Taylor Expansion {}'.format(self.fun),'taylor.png',self.fun))
+        #print(taylor_result, taylor_result)
 
 class TopWin():
     '''Class Responsible For Making Toplevel Windows'''
@@ -81,8 +80,15 @@ class TopWin():
         self.label_image = tk.Label(self.window, image = self.bg)
         self.label_image.pack(expand = True, fill = 'both')
         self.window.resizable(False,False)
+        self.label_image.bind('<Button-2>', self.save_image)
         self.label = tk.Label(self.window,text = self.fun)
         self.label.pack()
+
+    def save_image(self, image):
+        img = Image.open(self.image)
+        img = img.save('name.png')
+        
+        
         
 
 root = tk.Tk()
